@@ -10,36 +10,52 @@ public class Main {
         }
         int userInput= in.nextInt();
         while(userInput!=0){
-            if (userInput==1){
-                System.out.println("Введите количество шагов");
-                int steps=in.nextInt();
-                System.out.println("Введите месяц");
-                String month=in.next();
-                System.out.println("Введите день");
-                int day =in.nextInt();
-                stepTracker.inputSteps(steps,month,day);
-                printMenu();
-                userInput = in.nextInt();
-            }
-            if (userInput==2) {
-                stepTracker.printStatMenu();
-                int userIn = in.nextInt();
-                while (userIn != 0) {
+            if (userInput==1 || userInput==2 || userInput==3 ) {
+                if (userInput == 1) {
+                    System.out.println("Введите количество шагов");
+                    int steps = in.nextInt();
                     System.out.println("Введите месяц");
                     String month = in.next();
-                    stepTracker.showStat(month, userIn);
-                    userIn = in.nextInt();
+                    System.out.println("Введите день");
+                    int day = in.nextInt();
+                    stepTracker.inputSteps(steps, month, day);
+                    printMenu();
+                    userInput = in.nextInt();
                 }
+                if (userInput == 2) {
+                    stepTracker.printStatMenu();
+                    int userIn = in.nextInt();
+                    while (userIn != 0) {
+                        if (userIn >= 1 && userIn <= 7 && (userIn % 1 == 0)) {
+                            System.out.println("Введите месяц");
+                            String month = in.next();
+                            stepTracker.showStat(month, userIn);
+                            userIn = in.nextInt();
+                        }
+                        else {
+                            System.out.println("Номер введен неверно");
+                            stepTracker.printStatMenu();
+                            userIn = in.nextInt();
+                        }
+
+                    }
+                    printMenu();
+                    userInput = in.nextInt();
+                }
+                if (userInput == 3) {
+                    System.out.println("Введите цель");
+                    int goal = in.nextInt();
+                    stepTracker.changeGoal(goal);
+                    printMenu();
+                    userInput = in.nextInt();
+                }
+            }
+            else{
+                System.out.println("Номер введен неверно");
                 printMenu();
                 userInput = in.nextInt();
             }
-            if (userInput==3){
-                System.out.println("Введите цель");
-                int goal = in.nextInt();
-                stepTracker.changeGoal(goal);
-                printMenu();
-                userInput = in.nextInt();
-            }
+
         }
     }
     public static void printMenu(){

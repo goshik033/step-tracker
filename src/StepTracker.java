@@ -2,6 +2,7 @@ import java.util.HashMap;
 
 public class StepTracker {
     HashMap<Integer,int[]> monthToData=new HashMap<Integer,int[]>();
+    Converter converter = new Converter();
     int norm=10000;
     public StepTracker(){
         for (int i=0;i<12;i++){
@@ -13,9 +14,23 @@ public class StepTracker {
         return days;
     }
     public void inputSteps(int steps, String month, int day){
+        if (steps < 0) {
+            System.out.println("Количество шагов должно быть неотрицательным");
+            return;
+        }
+        if (day < 1 || day > 30) {
+            System.out.println("Введен неверный день");
+            return;
+        }
         int monthInt=monthConverter(month);
-        monthToData.get(monthInt)[day]=steps;
-        System.out.println("nice");
+        if(monthInt==12){
+            System.out.println("Месяц введен неверно");
+
+        }
+        else {
+            monthToData.get(monthInt)[day] = steps;
+            System.out.println("nice");
+        }
 
     }
     public void printMas(){
@@ -32,45 +47,54 @@ public class StepTracker {
     }
     public void showStat(String month, int userIn){
         int monthInt=monthConverter(month);
-        switch(userIn){
-            case 1:
-                System.out.println(stepsSum(monthInt));
-                printStatMenu();
-                break;
-            case 2:
-                System.out.println(maxStepCount(monthInt));
-                printStatMenu();
-                break;
-            case 3:
-                System.out.println((float) stepsSum(monthInt)/30);
-                printStatMenu();
-                break;
-            case 5:
-                everyDaySteps(monthInt);
-                printStatMenu();
-                break;
-            case 4:
-                System.out.println((float) stepsSum(monthInt)/1200);
-                printStatMenu();
-                break;
-            case 6:
-                System.out.println((float) stepsSum(monthInt)/1200*50+" ккал");
-                printStatMenu();
-                break;
-            case 7:
-                System.out.println(bestSeri(monthInt));
-                printStatMenu();
-                break;
-            case 0:
-                break;
-
+        if (monthInt==12){
+            System.out.println("Месяц введен неверно");
+            printStatMenu();
         }
-
-
+        else {
+            switch (userIn) {
+                case 1:
+                    System.out.println(stepsSum(monthInt));
+                    printStatMenu();
+                    break;
+                case 2:
+                    System.out.println(maxStepCount(monthInt));
+                    printStatMenu();
+                    break;
+                case 3:
+                    System.out.println((float) stepsSum(monthInt) / 30);
+                    printStatMenu();
+                    break;
+                case 5:
+                    everyDaySteps(monthInt);
+                    printStatMenu();
+                    break;
+                case 4:
+                    System.out.println(converter.kilConv(stepsSum(monthInt)));
+                    printStatMenu();
+                    break;
+                case 6:
+                    System.out.println(converter.kalConv(stepsSum(monthInt)) + " ккал");
+                    printStatMenu();
+                    break;
+                case 7:
+                    System.out.println(bestSeri(monthInt));
+                    printStatMenu();
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Номер введен неверно");
+                    printStatMenu();
+            }
+        }
     }
     public void everyDaySteps(int month){
-        for (int i =0; i<30;i++) {
+        for (int i =0; i<29;i++) {
             System.out.print(i+1+" день: "+monthToData.get(month)[i]+", ");
+            if (i==28)
+                System.out.println(i+2+" день: "+monthToData.get(month)[i+1]+". ");
+
         }
     }
     public int stepsSum(int month){
@@ -151,8 +175,11 @@ public class StepTracker {
             case "Ноябрь":
                 value =  10;
                 break;
-            default:
+            case "Декабрь":
                 value =  11;
+                break;
+            default:
+                value =  12;
         }
         return value;
     }
